@@ -10,14 +10,20 @@ from vars import *
 # Рандомим в начале каждого раунда
 
 def switch(dist) -> int:
-    switch_flag = uniform(0, 1) <= LAMBDA_SWITCH_PROBABILITY
-    
-    return_value = dist
-    
-    if switch_flag:
-        return_value = 0 if dist == 1 else 1
+    if dist == 0:
+        switch_flag = uniform(0, 1) <= LAMBDA12_SWITCH_PROBABILITY
+        if switch_flag:
+            return 1
+        else:
+            return dist
         
-    return return_value
+    else:
+        switch_flag = uniform(0, 1) <= LAMBDA21_SWITCH_PROBABILITY
+        if switch_flag:
+            return 0
+        else:
+            return dist
+    
 
 if __name__ == '__main__':
     subcribers = [Subscriber(id) for id in range(SUBSCRIBERS_COUNT)]
