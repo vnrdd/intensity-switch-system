@@ -3,6 +3,7 @@ import utils
 from random import uniform
 from request import Request
 from subscriber import Subscriber
+import matplotlib.pyplot as plt
 from vars import *
 
 
@@ -29,9 +30,15 @@ if __name__ == '__main__':
     subcribers = [Subscriber(id) for id in range(SUBSCRIBERS_COUNT)]
     cur_slot = 0
     current_round_dist = 0
+    lambda_history = []
 
     for cur_slot in range(SLOTS):
         current_round_dist = switch(current_round_dist)
+        
+        if current_round_dist == 0:
+            lambda_history.append(LAMBDA1)
+        else:
+            lambda_history.append(LAMBDA2)
         
         channel_response = ''
         subscribers_sending_this_slot = []
@@ -79,4 +86,17 @@ if __name__ == '__main__':
     print(f'\033[92mLamb_in: {requests_overall / SLOTS}')
     print(f'Lamb_out: {lambda_out / SLOTS}\n')
     
+    print(f'\nAverage lambda: {sum(lambda_history) / SLOTS}')
+    
     print(f'Average delay: {utils.calculate_average_delay(subcribers)}\033[0m')
+    
+    plt.figure(1)
+    plt.axhline(y=LAMBDA1, color='grey',linestyle='--')
+    plt.axhline(y=LAMBDA2, color='black', linestyle='--')
+    plt.plot(lambda_history[:10])
+    plt.grid(True)
+    plt.xlabel('Timeline')
+    plt.ylabel('Lambda')
+    
+    plt.legend(['Lambda_n', 'Lambda_v'])
+    plt.show()
